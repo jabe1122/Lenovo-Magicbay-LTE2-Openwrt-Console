@@ -1,0 +1,20 @@
+#!/bin/sh
+
+[ "$ACTION" = "ifup" ] || exit 0
+
+netifd_iface="$(uci -q get mbim-lenovo.main.netifd_iface 2>/dev/null)"
+case "$netifd_iface" in
+	""|"auto")
+		case "$INTERFACE" in
+			modem_*) ;;
+			*) exit 0 ;;
+		esac
+		;;
+	*)
+		[ "$INTERFACE" = "$netifd_iface" ] || exit 0
+		;;
+esac
+
+/usr/bin/mbim-lenovo-up.sh repair >/tmp/mbim-lenovo-repair.log 2>&1 &
+
+exit 0

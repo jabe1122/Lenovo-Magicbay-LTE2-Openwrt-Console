@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lenovo MagicBay LTE2控制台</title>
+<style>
+:root{color-scheme:light;--bg:#f5f7fb;--panel:#fff;--line:#d9dee8;--text:#172033;--muted:#667085;--ok:#087443;--warn:#b54708;--bad:#b42318;--blue:#155eef;--orange:#f79009}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:15px}.wrap{max-width:1180px;margin:0 auto;padding:18px}.top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}h1{font-size:24px;line-height:1.2;margin:0 0 4px}.sub{color:var(--muted);font-size:13px}.actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}button{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:7px;padding:8px 13px;font-weight:650;cursor:pointer}button.primary{background:var(--blue);border-color:var(--blue);color:#fff}button.danger{color:var(--bad)}button:disabled{opacity:.55;cursor:wait}.banner{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}.pill{display:inline-block;border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;background:#eef2f6;color:#344054}.pill.ok{background:#dcfae6;color:var(--ok)}.pill.warn{background:#fffaeb;color:var(--warn)}.pill.bad{background:#fef3f2;color:var(--bad)}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px}.card{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:11px 12px;min-height:76px}.label{color:var(--muted);font-size:12px;margin-bottom:6px}.value{font-size:18px;font-weight:750;overflow-wrap:anywhere}.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.section{margin-top:12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:12px}.section h2{font-size:15px;margin:0 0 8px}.chartBox{position:relative;height:260px;padding-left:58px;padding-bottom:34px}.yAxis{position:absolute;left:0;top:6px;bottom:34px;width:52px;color:var(--muted);font-size:11px}.yAxis span{position:absolute;right:6px;transform:translateY(50%);white-space:nowrap}.yAxis .topTick{top:0}.yAxis .midTick{top:50%}.yAxis .bottomTick{bottom:0}.plot{position:absolute;left:58px;right:0;top:6px;bottom:34px;border-left:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(to bottom,#eef2f6 1px,transparent 1px) 0 0/100% 50%;overflow:hidden}.bars{height:100%;display:flex;align-items:flex-end;gap:4px;padding:0 6px}.barPair{flex:1 1 8px;min-width:6px;height:100%;display:flex;align-items:flex-end;gap:1px;cursor:crosshair}.bar{flex:1 1 0;min-height:1px;border-radius:3px 3px 0 0}.rx{background:var(--blue)}.tx{background:var(--orange)}.xAxis{position:absolute;left:58px;right:0;bottom:0;height:28px;color:var(--muted);font-size:11px;display:flex;align-items:flex-start;justify-content:space-between;padding-top:6px}.axisTitle{position:absolute;right:0;bottom:14px;color:var(--muted);font-size:12px}.tip{position:absolute;z-index:4;display:none;max-width:240px;background:#172033;color:#fff;border-radius:7px;padding:7px 9px;font-size:12px;line-height:1.5;box-shadow:0 8px 24px rgba(16,24,40,.18);pointer-events:none;white-space:pre-line}.note{color:var(--muted);font-size:12px;margin-top:8px}.dot{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}pre{margin:0;white-space:pre-wrap;overflow:auto;overflow-wrap:anywhere;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.45}.log{background:#101828;color:#f2f4f7;border-radius:7px;padding:10px;min-height:220px}.foot{margin-top:10px;color:var(--muted);font-size:12px}@media(max-width:680px){.top{display:block}.actions{justify-content:flex-start;margin-top:12px}.wrap{padding:12px}button{flex:1 1 auto}.chartBox{height:240px;padding-left:50px}.plot{left:50px}.xAxis{left:50px}.axisTitle{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Lenovo MagicBay LTE2控制台</h1>
+      <div class="sub">ASR1803 MBIM，系统接口 modem_1_1，数据网卡 wwan0</div>
+    </div>
+    <div class="actions">
+      <button class="primary" data-action="start">启动</button>
+      <button class="danger" data-action="stop">停止</button>
+      <button data-action="restart">重启拨号</button>
+      <button data-action="status">刷新</button>
+    </div>
+  </div>
+  <div class="banner"><div id="message">正在读取状态...</div><span id="online-pill" class="pill">未知</span></div>
+  <div class="grid">
+    <div class="card"><div class="label">互联网</div><div id="internet" class="value">-</div></div>
+    <div class="card"><div class="label">连接</div><div id="running" class="value">-</div></div>
+    <div class="card"><div class="label">OpenWrt接口</div><div id="netifd" class="value">-</div></div>
+    <div class="card"><div class="label">模块</div><div id="module" class="value">-</div></div>
+    <div class="card"><div class="label">运营商</div><div id="provider" class="value">-</div></div>
+    <div class="card"><div class="label">信号 RSSI</div><div id="rssi" class="value">-</div></div>
+    <div class="card"><div class="label">IPv4</div><div id="ipv4" class="value">-</div></div>
+    <div class="card"><div class="label">IPv6</div><div id="ipv6" class="value">-</div></div>
+    <div class="card"><div class="label">网关</div><div id="gateway" class="value">-</div></div>
+    <div class="card"><div class="label">DNS</div><div id="dns" class="value">-</div></div>
+    <div class="card"><div class="label">流量</div><div id="traffic" class="value">-</div></div>
+    <div class="card"><div class="label">开机自启</div><div id="enabled" class="value">-</div></div>
+    <div class="card"><div class="label">注册/数据</div><div id="packet" class="value">-</div></div>
+  </div>
+  <div class="section">
+    <h2>流量统计</h2>
+    <div class="chartBox">
+      <div id="yAxis" class="yAxis"><span class="topTick">-</span><span class="midTick">-</span><span class="bottomTick">0 B</span></div>
+      <div id="plot" class="plot"><div id="bars" class="bars"></div><div id="tip" class="tip"></div></div>
+      <div id="xAxis" class="xAxis"></div>
+      <div class="axisTitle">时间</div>
+    </div>
+    <div id="traffic-summary" class="note">-</div>
+    <div class="note"><span class="dot rx"></span>下行流量&nbsp;&nbsp;<span class="dot tx"></span>上行流量</div>
+  </div>
+  <div class="section"><h2>默认路由</h2><pre id="route">-</pre></div>
+  <div class="section"><h2>最近日志（每行后为注释）</h2><pre id="log" class="log">-</pre></div>
+  <div class="foot">后端：/cgi-bin/mbim-lenovo-api；软件包：luci-app-mbim-lenovo</div>
+</div>
+<script>
+const api='/cgi-bin/mbim-lenovo-api';let busy=false;
+function parseKV(text){const o={};(text||'').split(/\r?\n/).forEach(line=>{const i=line.indexOf('=');if(i>0)o[line.slice(0,i)]=line.slice(i+1);});return o;}
+function cls(id,value,state){const el=document.getElementById(id);if(!el)return;el.className='value '+(state||'');el.textContent=value||'-';}
+function bytes(n){n=parseInt(n||'0',10);if(n>=1073741824)return(n/1073741824).toFixed(2)+' GB';if(n>=1048576)return(n/1048576).toFixed(1)+' MB';if(n>=1024)return(n/1024).toFixed(1)+' KB';return n+' B';}
+function parseHistory(v){const a=[];(v||'').split(';').forEach(item=>{const p=item.split(',');if(p.length!==3)return;const s={t:+p[0],rx:+p[1],tx:+p[2]};if(!isNaN(s.t)&&!isNaN(s.rx)&&!isNaN(s.tx))a.push(s);});return a;}
+function timeText(t){return new Date(t*1000).toLocaleTimeString();}
+function pad2(n){return n<10?'0'+n:String(n);}
+function hourText(t){const d=new Date(t*1000);return(d.getMonth()+1)+'/'+d.getDate()+' '+pad2(d.getHours())+':00';}
+function hourRangeText(t){const next=t+3600,a=new Date(t*1000),b=new Date(next*1000);if(a.getDate()===b.getDate()&&a.getMonth()===b.getMonth())return hourText(t)+'-'+pad2(b.getHours())+':00';return hourText(t)+'-'+hourText(next);}
+function hourlyBars(samples){const map={};let first=null,last=null,out=[];for(let i=1;i<samples.length;i++){const hour=Math.floor(samples[i].t/3600)*3600,rx=Math.max(0,samples[i].rx-samples[i-1].rx),tx=Math.max(0,samples[i].tx-samples[i-1].tx);if(first===null)first=hour;last=hour;if(!map[hour])map[hour]={t:hour,rx:0,tx:0};map[hour].rx+=rx;map[hour].tx+=tx;}if(first===null)return out;for(let t=first;t<=last;t+=3600)out.push(map[t]||{t,rx:0,tx:0});return out;}
+function showTip(e,b){const plot=document.getElementById('plot'),tip=document.getElementById('tip'),rect=plot.getBoundingClientRect();let left=e.clientX-rect.left+10,top=e.clientY-rect.top-10;tip.textContent=hourRangeText(b.t)+'\n下行流量 '+bytes(b.rx)+'\n上行流量 '+bytes(b.tx)+'\n合计 '+bytes(b.rx+b.tx);tip.style.display='block';tip.style.left=Math.min(left,Math.max(8,rect.width-210))+'px';tip.style.top=Math.max(8,top)+'px';}
+function renderChart(v){const samples=parseHistory(v);let bars=hourlyBars(samples),max=1,totalRx=0,totalTx=0;if(bars.length>24)bars=bars.slice(-24);const chart=document.getElementById('bars'),sum=document.getElementById('traffic-summary'),y=document.getElementById('yAxis'),x=document.getElementById('xAxis'),tip=document.getElementById('tip');chart.innerHTML='';x.innerHTML='';tip.style.display='none';if(!bars.length){chart.textContent='等待更多采样...';y.innerHTML='<span class="topTick">-</span><span class="midTick">-</span><span class="bottomTick">0 B</span>';sum.textContent='页面打开后会自动采样；后台服务也会定期采样。';return;}for(const b of bars){totalRx+=b.rx;totalTx+=b.tx;if(b.rx>max)max=b.rx;if(b.tx>max)max=b.tx;}y.innerHTML='<span class="topTick">'+bytes(max)+'</span><span class="midTick">'+bytes(Math.round(max/2))+'</span><span class="bottomTick">0 B</span>';[0,Math.floor((bars.length-1)/2),bars.length-1].forEach((idx,pos)=>{if(idx<0||idx>=bars.length)return;if(pos>0&&idx===0)return;const label=document.createElement('span');label.textContent=hourText(bars[idx].t);x.appendChild(label);});for(const b of bars){const pair=document.createElement('div'),r=document.createElement('div'),t=document.createElement('div');pair.className='barPair';pair.title=hourRangeText(b.t)+' 下行流量 '+bytes(b.rx)+' / 上行流量 '+bytes(b.tx)+' / 合计 '+bytes(b.rx+b.tx);r.className='bar rx';t.className='bar tx';r.style.height=Math.max(2,Math.round(b.rx/max*100))+'%';t.style.height=Math.max(2,Math.round(b.tx/max*100))+'%';pair.appendChild(r);pair.appendChild(t);pair.addEventListener('mouseenter',e=>showTip(e,b));pair.addEventListener('mousemove',e=>showTip(e,b));pair.addEventListener('mouseleave',()=>{tip.style.display='none';});chart.appendChild(pair);}sum.textContent='最近 '+bars.length+' 小时：下行流量 '+bytes(totalRx)+' / 上行流量 '+bytes(totalTx)+'；纵轴上限 '+bytes(max);}
+function setBusy(v){busy=v;document.querySelectorAll('button').forEach(b=>b.disabled=v);}
+function render(s){const online=s.internet==='1',connected=s.running==='1',present=s.dev_present==='1'&&s.iface_present==='1',netifdUp=s.netifd_up==='1',direct=s.mode==='direct';cls('internet',online?'在线':'离线',online?'ok':'bad');cls('running',connected?'已连接':'未连接',connected?'ok':'warn');cls('netifd',direct?((s.iface||'wwan0')+' / 直拨已接管'):((s.netifd_iface||'-')+' / '+(netifdUp?'系统已识别':'系统未识别')),(direct&&connected)||netifdUp?'ok':'warn');cls('module',present?'已识别':'未识别',present?'ok':'bad');cls('provider',s.provider||s.registration_state||'-');cls('rssi',s.rssi?s.rssi+' / 31':'-');cls('ipv4',s.ipv4||'-');cls('ipv6',s.ipv6||'-');cls('gateway',s.gateway||'-');cls('dns',s.dns||'-');cls('traffic','下行流量 '+bytes(s.rx_bytes)+' / 上行流量 '+bytes(s.tx_bytes));cls('enabled',s.enabled==='1'?'已开启':'未开启',s.enabled==='1'?'ok':'warn');cls('packet',[s.registration_state,s.packet_state].filter(Boolean).join(' / ')||'-');document.getElementById('route').textContent=s.route||'-';document.getElementById('log').textContent=(s.log||'').replace(/\\n/g,'\n')||'-';renderChart(s.traffic_history||'');const pill=document.getElementById('online-pill');pill.textContent=online?'ONLINE':(connected?'NO INTERNET':'OFFLINE');pill.className='pill '+(online?'ok':(connected?'warn':'bad'));}
+async function call(action){if(busy&&action!=='status')return;setBusy(action!=='status');document.getElementById('message').textContent=action==='status'?'正在刷新...':'已发送 '+action+' 指令，正在读取状态...';try{const res=await fetch(api+'?action='+encodeURIComponent(action),{cache:'no-store'});const data=parseKV(await res.text());if(data.error){document.getElementById('message').textContent='请求失败：'+data.error;return;}render(data);document.getElementById('message').textContent='最后刷新：'+new Date().toLocaleTimeString();}catch(e){document.getElementById('message').textContent='无法连接路由器 API：'+e.message;}finally{setBusy(false);}}
+document.querySelectorAll('button[data-action]').forEach(b=>b.addEventListener('click',()=>call(b.dataset.action)));call('status');setInterval(()=>{if(!busy)call('status');},5000);
+</script>
+</body>
+</html>

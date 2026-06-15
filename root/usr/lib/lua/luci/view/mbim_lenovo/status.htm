@@ -1,0 +1,206 @@
+<%+header%>
+
+<h2><a name="content">Lenovo MagicBay LTE2控制台</a></h2>
+
+<style type="text/css">
+.mbim-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 10px; margin: 12px 0; }
+.mbim-card { border: 1px solid #ddd; border-radius: 6px; padding: 10px 12px; background: #fff; min-height: 72px; }
+.mbim-label { color: #666; font-size: 12px; margin-bottom: 4px; }
+.mbim-value { font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.mbim-ok { color: #078a35; }
+.mbim-warn { color: #b36b00; }
+.mbim-bad { color: #b00020; }
+.mbim-actions { margin: 12px 0; }
+.mbim-actions .cbi-button { margin-right: 8px; margin-bottom: 6px; }
+.mbim-chart-box { border: 1px solid #ddd; border-radius: 6px; background: #fff; padding: 10px; margin: 12px 0; }
+.mbim-chart { height: 190px; display: flex; align-items: flex-end; gap: 4px; border-left: 1px solid #ddd; border-bottom: 1px solid #ddd; padding: 8px 6px 0; overflow: hidden; }
+.mbim-bar-pair { flex: 1 1 8px; min-width: 5px; height: 100%; display: flex; align-items: flex-end; gap: 1px; }
+.mbim-bar { flex: 1 1 0; min-height: 1px; border-radius: 3px 3px 0 0; }
+.mbim-bar-rx { background: #155eef; }
+.mbim-bar-tx { background: #f79009; }
+.mbim-chart-note { color: #666; font-size: 12px; margin-top: 8px; }
+.mbim-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+#mbim-log { background: #111; color: #eee; min-height: 180px; padding: 10px; overflow: auto; white-space: pre-wrap; }
+</style>
+
+<fieldset class="cbi-section">
+	<legend>Lenovo MagicBay LTE2 / ASR1803</legend>
+	<div class="mbim-actions">
+		<input class="cbi-button cbi-button-apply" type="button" value="启动" onclick="mbimAction('start')" />
+		<input class="cbi-button cbi-button-reset" type="button" value="停止" onclick="mbimAction('stop')" />
+		<input class="cbi-button cbi-button-reload" type="button" value="重启拨号" onclick="mbimAction('restart')" />
+		<input class="cbi-button" type="button" value="刷新" onclick="loadStatus()" />
+		<span id="mbim-message"></span>
+	</div>
+
+	<div class="mbim-grid">
+		<div class="mbim-card"><div class="mbim-label">互联网</div><div id="internet" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">连接</div><div id="running" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">模块</div><div id="module" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">运营商</div><div id="provider" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">信号 RSSI</div><div id="rssi" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">IPv4</div><div id="ipv4" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">IPv6</div><div id="ipv6" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">网关</div><div id="gateway" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">DNS</div><div id="dns" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">流量</div><div id="traffic" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">开机自启</div><div id="enabled" class="mbim-value">-</div></div>
+		<div class="mbim-card"><div class="mbim-label">注册/数据</div><div id="packet" class="mbim-value">-</div></div>
+	</div>
+
+	<h3>流量统计</h3>
+	<div class="mbim-chart-box">
+		<div id="traffic-chart" class="mbim-chart"></div>
+		<div id="traffic-summary" class="mbim-chart-note">-</div>
+		<div class="mbim-chart-note">
+			<span class="mbim-dot mbim-bar-rx"></span>下行流量
+			&nbsp;&nbsp;
+			<span class="mbim-dot mbim-bar-tx"></span>上行流量
+		</div>
+	</div>
+
+	<h3>默认路由</h3>
+	<pre id="route">-</pre>
+	<h3>最近日志（每行后为注释）</h3>
+	<pre id="mbim-log">Loading...</pre>
+</fieldset>
+
+<script type="text/javascript">
+function parseKV(text) {
+	var out = {};
+	(text || '').split(/\r?\n/).forEach(function(line) {
+		var i = line.indexOf('=');
+		if (i > 0) out[line.slice(0, i)] = line.slice(i + 1);
+	});
+	return out;
+}
+
+function setText(id, value, cls) {
+	var el = document.getElementById(id);
+	if (!el) return;
+	el.className = 'mbim-value' + (cls ? ' ' + cls : '');
+	el.textContent = value || '-';
+}
+
+function bytes(n) {
+	n = parseInt(n || '0', 10);
+	if (n >= 1073741824) return (n / 1073741824).toFixed(2) + ' GB';
+	if (n >= 1048576) return (n / 1048576).toFixed(1) + ' MB';
+	if (n >= 1024) return (n / 1024).toFixed(1) + ' KB';
+	return n + ' B';
+}
+
+function parseHistory(value) {
+	var samples = [];
+	(value || '').split(';').forEach(function(item) {
+		var p = item.split(',');
+		var s;
+		if (p.length != 3) return;
+		s = { t: parseInt(p[0], 10), rx: parseInt(p[1], 10), tx: parseInt(p[2], 10) };
+		if (!isNaN(s.t) && !isNaN(s.rx) && !isNaN(s.tx)) samples.push(s);
+	});
+	return samples;
+}
+
+function renderTrafficChart(history) {
+	var samples = parseHistory(history);
+	var bars = [];
+	var chart = document.getElementById('traffic-chart');
+	var summary = document.getElementById('traffic-summary');
+	var max = 1;
+	var totalRx = 0;
+	var totalTx = 0;
+	var i, prev, cur, rx, tx, start, label, pair, rxBar, txBar;
+
+	if (!chart || !summary) return;
+	chart.innerHTML = '';
+
+	for (i = 1; i < samples.length; i++) {
+		prev = samples[i - 1];
+		cur = samples[i];
+		rx = Math.max(0, cur.rx - prev.rx);
+		tx = Math.max(0, cur.tx - prev.tx);
+		if (rx + tx <= 0) continue;
+		bars.push({ t: cur.t, rx: rx, tx: tx });
+	}
+
+	if (bars.length > 36) bars = bars.slice(bars.length - 36);
+	if (!bars.length) {
+		chart.textContent = '等待更多采样...';
+		summary.textContent = '打开页面后会自动采样；服务后台也会定期采样。';
+		return;
+	}
+
+	for (i = 0; i < bars.length; i++) {
+		totalRx += bars[i].rx;
+		totalTx += bars[i].tx;
+		if (bars[i].rx > max) max = bars[i].rx;
+		if (bars[i].tx > max) max = bars[i].tx;
+	}
+
+	start = new Date(bars[0].t * 1000).toLocaleTimeString();
+	for (i = 0; i < bars.length; i++) {
+		label = new Date(bars[i].t * 1000).toLocaleTimeString() +
+			'  下行流量 ' + bytes(bars[i].rx) + ' / 上行流量 ' + bytes(bars[i].tx);
+		pair = document.createElement('div');
+		pair.className = 'mbim-bar-pair';
+		pair.title = label;
+		rxBar = document.createElement('div');
+		txBar = document.createElement('div');
+		rxBar.className = 'mbim-bar mbim-bar-rx';
+		txBar.className = 'mbim-bar mbim-bar-tx';
+		rxBar.style.height = Math.max(2, Math.round(bars[i].rx / max * 100)) + '%';
+		txBar.style.height = Math.max(2, Math.round(bars[i].tx / max * 100)) + '%';
+		pair.appendChild(rxBar);
+		pair.appendChild(txBar);
+		chart.appendChild(pair);
+	}
+
+	summary.textContent = '最近 ' + bars.length + ' 段（从 ' + start + ' 起）：下行流量 ' +
+		bytes(totalRx) + ' / 上行流量 ' + bytes(totalTx);
+}
+
+function render(s) {
+	var online = s.internet == '1';
+	var connected = s.running == '1';
+	var present = s.dev_present == '1' && s.iface_present == '1';
+
+	setText('internet', online ? '在线' : '离线', online ? 'mbim-ok' : 'mbim-bad');
+	setText('running', connected ? '已连接' : '未连接', connected ? 'mbim-ok' : 'mbim-warn');
+	setText('module', present ? '已识别' : '未识别', present ? 'mbim-ok' : 'mbim-bad');
+	setText('provider', s.provider || s.registration_state || '-');
+	setText('rssi', s.rssi ? (s.rssi + ' / 31') : '-');
+	setText('ipv4', s.ipv4 || '-');
+	setText('ipv6', s.ipv6 || '-');
+	setText('gateway', s.gateway || '-');
+	setText('dns', s.dns || '-');
+	setText('traffic', '下行流量 ' + bytes(s.rx_bytes) + ' / 上行流量 ' + bytes(s.tx_bytes));
+	setText('enabled', s.enabled == '1' ? '已开启' : '未开启', s.enabled == '1' ? 'mbim-ok' : 'mbim-warn');
+	setText('packet', [s.registration_state, s.packet_state].filter(Boolean).join(' / ') || '-');
+	document.getElementById('route').textContent = s.route || '-';
+	document.getElementById('mbim-log').textContent = (s.log || '').replace(/\\n/g, '\n') || '-';
+	renderTrafficChart(s.traffic_history || '');
+}
+
+function loadStatus() {
+	document.getElementById('mbim-message').textContent = '正在刷新...';
+	XHR.get('<%=luci.dispatcher.build_url("admin", "services", "mbim_lenovo", "status")%>', null, function(x) {
+		render(parseKV(x.responseText));
+		document.getElementById('mbim-message').textContent = '最后刷新：' + new Date().toLocaleTimeString();
+	});
+}
+
+function mbimAction(action) {
+	document.getElementById('mbim-message').textContent = '已发送指令：' + action;
+	XHR.get('<%=luci.dispatcher.build_url("admin", "services", "mbim_lenovo")%>/' + action, null, function(x) {
+		render(parseKV(x.responseText));
+		document.getElementById('mbim-message').textContent = '已执行：' + action;
+		setTimeout(loadStatus, 3000);
+	});
+}
+
+loadStatus();
+window.setInterval(loadStatus, 5000);
+</script>
+
+<%+footer%>

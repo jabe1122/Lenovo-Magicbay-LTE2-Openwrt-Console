@@ -1,0 +1,22 @@
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+*.swp
+*.log
+
+# Local OpenWrt build output
+/bin/
+/build_dir/
+/dl/
+/feeds/
+/key-build*
+/logs/
+/staging_dir/
+/tmp/
+
+# Local editor and environment files
+/.idea/
+/.vscode/
+.env
+.env.*

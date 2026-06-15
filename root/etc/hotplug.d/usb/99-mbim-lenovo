@@ -1,0 +1,25 @@
+#!/bin/sh
+
+[ "$ACTION" = "add" ] || [ "$ACTION" = "remove" ] || exit 0
+[ "$(uci -q get mbim-lenovo.main.auto_hotplug 2>/dev/null)" = "1" ] || exit 0
+
+want="$(uci -q get mbim-lenovo.main.usb_product 2>/dev/null)"
+[ -n "$want" ] || want="17ef:7005"
+case "$want" in
+	*:*) want="${want%:*}/${want#*:}" ;;
+esac
+
+case "$PRODUCT" in
+	"$want"/*)
+		case "$ACTION" in
+			add)
+				/etc/init.d/mbim-lenovo start >/dev/null 2>&1 &
+				;;
+			remove)
+				/usr/bin/mbim-lenovo-up.sh detach >/tmp/mbim-lenovo-detach.log 2>&1 &
+				;;
+		esac
+		;;
+esac
+
+exit 0

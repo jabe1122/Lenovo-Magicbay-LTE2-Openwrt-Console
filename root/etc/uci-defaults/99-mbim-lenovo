@@ -1,0 +1,52 @@
+#!/bin/sh
+
+if ! uci -q show mbim-lenovo.main >/dev/null 2>&1; then
+	uci -q batch <<'EOF'
+set mbim-lenovo.main=mbim
+set mbim-lenovo.main.enabled='1'
+set mbim-lenovo.main.device='/dev/cdc-wdm0'
+set mbim-lenovo.main.iface='wwan0'
+set mbim-lenovo.main.apn='cmnet'
+set mbim-lenovo.main.use_netifd='0'
+set mbim-lenovo.main.netifd_iface='auto'
+set mbim-lenovo.main.lan_if='br-lan'
+set mbim-lenovo.main.metric='2'
+set mbim-lenovo.main.test_host='223.5.5.5'
+set mbim-lenovo.main.disable_netifd_mbim='0'
+set mbim-lenovo.main.native_gl_marker='0'
+set mbim-lenovo.main.status_mbim_query='0'
+set mbim-lenovo.main.auto_hotplug='1'
+set mbim-lenovo.main.usb_product='17ef:7005'
+set mbim-lenovo.main.stats_interval='60'
+set mbim-lenovo.main.stats_samples='2880'
+commit mbim-lenovo
+EOF
+fi
+
+uci -q get mbim-lenovo.main.use_netifd >/dev/null 2>&1 || uci -q set mbim-lenovo.main.use_netifd='0'
+uci -q get mbim-lenovo.main.netifd_iface >/dev/null 2>&1 || uci -q set mbim-lenovo.main.netifd_iface='auto'
+uci -q get mbim-lenovo.main.native_gl_marker >/dev/null 2>&1 || uci -q set mbim-lenovo.main.native_gl_marker='0'
+uci -q get mbim-lenovo.main.status_mbim_query >/dev/null 2>&1 || uci -q set mbim-lenovo.main.status_mbim_query='0'
+[ "$(uci -q get mbim-lenovo.main.disable_netifd_mbim 2>/dev/null)" = "1" ] && uci -q set mbim-lenovo.main.disable_netifd_mbim='0'
+[ "$(uci -q get mbim-lenovo.main.stats_samples 2>/dev/null)" = "240" ] && uci -q set mbim-lenovo.main.stats_samples='2880'
+uci -q commit mbim-lenovo
+
+if [ -f /etc/firewall.user ] && ! grep -q '# BEGIN mbim-lenovo' /etc/firewall.user 2>/dev/null; then
+	cat >> /etc/firewall.user <<'EOF'
+
+# BEGIN mbim-lenovo
+[ -x /usr/bin/mbim-lenovo-up.sh ] && /usr/bin/mbim-lenovo-up.sh firewall
+# END mbim-lenovo
+EOF
+fi
+
+/etc/init.d/mbim-lenovo enable >/dev/null 2>&1 || true
+/etc/init.d/rpcd reload >/dev/null 2>&1 || true
+/etc/init.d/uhttpd reload >/dev/null 2>&1 || true
+
+if [ -z "$IPKG_INSTROOT" ]; then
+	/etc/init.d/mbim-lenovo start >/dev/null 2>&1 || true
+fi
+
+rm -f /tmp/luci-indexcache /tmp/luci-modulecache/* 2>/dev/null || true
+exit 0

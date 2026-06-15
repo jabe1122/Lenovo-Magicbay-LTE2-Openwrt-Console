@@ -1,0 +1,17 @@
+* text=auto
+
+*.sh text eol=lf
+Makefile text eol=lf
+root/etc/init.d/* text eol=lf
+root/etc/hotplug.d/*/* text eol=lf
+root/etc/uci-defaults/* text eol=lf
+root/lib/netifd/proto/* text eol=lf
+root/usr/bin/* text eol=lf
+root/www/cgi-bin/* text eol=lf
+
+*.gz binary
+*.ipk binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary

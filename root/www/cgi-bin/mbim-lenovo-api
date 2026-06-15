@@ -1,0 +1,37 @@
+#!/bin/sh
+
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+SCRIPT=/usr/bin/mbim-lenovo-up.sh
+LOG=/tmp/mbim-lenovo-web.log
+
+printf 'Content-Type: text/plain; charset=utf-8\r\n'
+printf 'Cache-Control: no-store\r\n\r\n'
+
+action=status
+case "&$QUERY_STRING&" in
+	*"&action=start&"*) action=start ;;
+	*"&action=stop&"*) action=stop ;;
+	*"&action=restart&"*) action=restart ;;
+	*"&action=status&"*|"&&") action=status ;;
+	*) echo "error=bad_action"; exit 0 ;;
+esac
+
+case "$action" in
+	start)
+		/etc/init.d/mbim-lenovo start >"$LOG" 2>&1
+		echo "action=start"
+		;;
+	stop)
+		( "$SCRIPT" stop >"$LOG" 2>&1 ) &
+		echo "action=stop"
+		;;
+	restart)
+		( "$SCRIPT" restart >"$LOG" 2>&1 ) &
+		echo "action=restart"
+		;;
+	status)
+		echo "action=status"
+		;;
+esac
+
+"$SCRIPT" status 2>/dev/null

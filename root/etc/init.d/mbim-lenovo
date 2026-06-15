@@ -1,0 +1,24 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=10
+
+start() {
+	enabled="$(uci -q get mbim-lenovo.main.enabled 2>/dev/null)"
+	[ "$enabled" = "0" ] && return 0
+	/usr/bin/mbim-lenovo-up.sh start >/tmp/mbim-lenovo-start.log 2>&1 &
+}
+
+stop() {
+	/usr/bin/mbim-lenovo-up.sh stop >/tmp/mbim-lenovo-stop.log 2>&1
+}
+
+restart() {
+	stop
+	sleep 2
+	start
+}
+
+reload() {
+	/usr/bin/mbim-lenovo-up.sh firewall >/tmp/mbim-lenovo-firewall.log 2>&1
+}

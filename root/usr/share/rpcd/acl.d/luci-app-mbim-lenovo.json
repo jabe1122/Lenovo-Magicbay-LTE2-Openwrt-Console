@@ -1,0 +1,15 @@
+{
+	"luci-app-mbim-lenovo": {
+		"description": "Grant access to USB LTE MBIM modem status and controls",
+		"read": {
+			"ubus": {
+				"file": [ "exec" ]
+			}
+		},
+		"write": {
+			"ubus": {
+				"file": [ "exec" ]
+			}
+		}
+	}
+}
