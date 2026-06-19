@@ -28,26 +28,23 @@ annotated logs, and the ASR1803 all-zero Ethernet MAC receive-path quirk.
 ## Compatibility / 兼容性定位
 
 This project is Lenovo MagicBay LTE2 / ASR1803 focused. It is not a generic
-manager for every USB cellular modem. Starting with `1.0.1-r10`, the package
-uses standard OpenWrt LuCI dependency names and ships as a single `_all.ipk`
-because it contains scripts and LuCI assets instead of compiled CPU-specific
-binaries.
+manager for every USB cellular modem. Starting with `1.0.1-r11`, releases ship
+two architecture-independent packages because the runtime is made of scripts
+and LuCI assets instead of compiled CPU-specific binaries.
 
 本项目面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用管理器。
-从 `1.0.1-r10` 开始，软件包使用标准 OpenWrt LuCI 依赖名称，并以单个 `_all.ipk`
-发布，因为它主要由脚本和 LuCI 页面组成，不包含针对某个 CPU 架构编译的二进制。
+从 `1.0.1-r11` 开始，发布物提供两个架构无关软件包，因为运行时代码主要由脚本和
+LuCI 页面组成，不包含针对某个 CPU 架构编译的二进制。
 
 The package was developed and tested on a GL.iNet MT3600BE running GL.iNet SDK 4
-firmware, while `r10` is packaged for standard OpenWrt-style LuCI installs. The
-GL.iNet OUI entry remains included as an optional enhancement; on routers
-without GL.iNet OUI it is simply ignored. On stock or custom OpenWrt builds,
-make sure the firmware provides the required MBIM, LuCI, traffic-control and
-firewall components.
+firmware. The standard OpenWrt package depends on `luci-base`; the GL.iNet
+package depends on `gl-sdk4-luci` and `gl-sdk4-lua-utils`. Both packages install
+the same runtime files, so choose one package for your firmware and do not
+install both at the same time.
 
 本包基于运行 GL.iNet SDK 4 固件的 GL.iNet MT3600BE 开发和测试。普通 OpenWrt
-或其他定制固件需要具备 MBIM、LuCI、流量控制和防火墙相关组件。`r10` 已按标准
-OpenWrt LuCI 安装方式打包；GL.iNet OUI 入口作为可选增强保留，在没有 GL.iNet
-OUI 的路由器上会被自然忽略。
+软件包依赖 `luci-base`；GL.iNet 软件包依赖 `gl-sdk4-luci` 和 `gl-sdk4-lua-utils`。
+两个包安装的是同一套运行文件，请按固件选择其中一个，不要同时安装。
 
 ## Features / 功能
 
@@ -78,26 +75,23 @@ Release artifacts are kept in `dist/`.
 
 发布产物位于 `dist/` 目录。
 
-For OpenWrt-style installs where the listed dependencies are available:
+For standard OpenWrt or custom firmware with standard LuCI package names:
 
-在依赖已满足的 OpenWrt 类固件上安装：
+标准 OpenWrt 或使用标准 LuCI 包名的定制固件：
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r11_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
 
-The same `_all.ipk` is used on the tested GL.iNet target. If your GL.iNet
-firmware does not expose standard LuCI dependency names, build from source on
-that firmware SDK or adjust dependencies for that firmware.
+For GL.iNet SDK 4 firmware using GL.iNet LuCI dependency names:
 
-已测试的 GL.iNet 目标也使用同一个 `_all.ipk`。如果你的 GL.iNet 固件不提供标准
-LuCI 依赖包名，请在对应固件 SDK 中源码编译，或按该固件的包名调整依赖。
+使用 GL.iNet LuCI 依赖包名的 GL.iNet SDK 4 固件：
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r11_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
@@ -106,6 +100,12 @@ The package enables `/etc/init.d/mbim-lenovo` on install. If the module is
 already plugged in, it should dial automatically.
 
 安装后软件包会启用 `/etc/init.d/mbim-lenovo`。如果模块已经插入，服务会自动尝试拨号。
+
+If you switch between the standard and GL.iNet packages, remove the previously
+installed variant first because the two packages install the same runtime files.
+
+如果要在标准包和 GL.iNet 包之间切换，请先卸载已经安装的另一种包，因为两个包安装的是
+同一套运行文件。
 
 ## Configuration / 配置
 

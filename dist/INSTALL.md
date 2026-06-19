@@ -25,40 +25,40 @@ not a generic package for every USB cellular modem.
 
 这个包面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用包。
 
-Since `1.0.1-r10`, the release uses one architecture-independent `_all.ipk` and
-standard OpenWrt LuCI dependency names. The GL.iNet OUI menu entry is included
-as an optional enhancement and is ignored on systems without GL.iNet OUI.
+Since `1.0.1-r11`, the release provides two architecture-independent `_all.ipk`
+packages. The standard OpenWrt package uses `luci-base`; the GL.iNet package
+uses `gl-sdk4-luci` and `gl-sdk4-lua-utils`.
 
-从 `1.0.1-r10` 开始，发布物使用单个架构无关的 `_all.ipk`，并采用标准 OpenWrt
-LuCI 依赖名称。GL.iNet OUI 菜单入口作为可选增强保留；没有 GL.iNet OUI 的系统会
-自然忽略它。
+从 `1.0.1-r11` 开始，发布物提供两个架构无关的 `_all.ipk`。标准 OpenWrt 包使用
+`luci-base`；GL.iNet 包使用 `gl-sdk4-luci` 和 `gl-sdk4-lua-utils`。
 
 For stock or custom OpenWrt builds, make sure MBIM, LuCI, traffic-control and
-firewall support are available. If your firmware uses different package names,
-rebuild from the matching OpenWrt/firmware SDK and adjust dependencies there.
+firewall support are available. Both packages install the same runtime files, so
+install only one of them.
 
 普通 OpenWrt 或其他定制固件需要具备 MBIM、LuCI、流量控制和防火墙支持。如果你的
-固件使用不同的依赖包名，请使用对应 OpenWrt/固件 SDK 重新编译并调整依赖。
+固件使用不同的依赖包名，请使用对应 OpenWrt/固件 SDK 重新编译并调整依赖。两个包
+安装的是同一套运行文件，请只安装其中一个。
 
 ## Install / 安装
 
-For OpenWrt-style installs, use the architecture-independent package:
+For standard OpenWrt or custom firmware with standard LuCI package names:
 
-OpenWrt 类固件使用架构无关包：
+标准 OpenWrt 或使用标准 LuCI 包名的定制固件：
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r11_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
 
-The tested GL.iNet MT3600BE target uses the same `_all.ipk` in this release:
+For GL.iNet SDK 4 firmware using GL.iNet LuCI dependency names:
 
-当前已测试的 GL.iNet MT3600BE 目标在本版本中使用同一个 `_all.ipk`：
+使用 GL.iNet LuCI 依赖包名的 GL.iNet SDK 4 固件：
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r11_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
@@ -70,6 +70,17 @@ After installation, the service is enabled and tries to start automatically:
 ```sh
 /etc/init.d/mbim-lenovo status
 /usr/bin/mbim-lenovo-up.sh status
+```
+
+If you switch between the standard and GL.iNet packages, remove the previously
+installed variant first:
+
+如果要在标准包和 GL.iNet 包之间切换，请先卸载已经安装的另一种包：
+
+```sh
+opkg remove luci-app-mbim-lenovo
+# or / 或
+opkg remove luci-app-mbim-lenovo-glinet
 ```
 
 ## Web UI Entry / 管理界面入口

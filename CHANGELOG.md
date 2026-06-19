@@ -1,5 +1,14 @@
 # Changelog / 更新日志
 
+## 1.0.1-r11
+
+- Published two install packages: standard OpenWrt and GL.iNet SDK 4 variants.
+- 发布两个安装包：标准 OpenWrt 版本和 GL.iNet SDK 4 版本。
+- Kept identical runtime files in both packages, with different LuCI dependency names.
+- 两个包保留相同运行文件，仅 LuCI 依赖包名不同。
+- Marked the two packages as conflicting so they are not installed together.
+- 将两个包标记为互斥，避免同时安装。
+
 ## 1.0.1-r10
 
 - Switched package dependencies from GL.iNet SDK 4 LuCI package names to standard OpenWrt LuCI dependency names.
