@@ -2,7 +2,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-mbim-lenovo
 PKG_VERSION:=1.0.1
-PKG_RELEASE:=9
+PKG_RELEASE:=10
 PKG_LICENSE:=MIT
 PKG_MAINTAINER:=OpenWrt User
 
@@ -14,7 +14,7 @@ define Package/luci-app-mbim-lenovo
   SUBMENU:=3. Applications
   TITLE:=Lenovo MagicBay LTE2 OpenWrt Console
   PKGARCH:=all
-  DEPENDS:=+gl-sdk4-luci +gl-sdk4-lua-utils +rpcd +rpcd-mod-file +wwan +umbim +kmod-usb-net-cdc-mbim +kmod-sched-core +libmbim +mbim-utils +ip-full +tc-tiny +iptables +iptables-mod-conntrack-extra +usb-modeswitch
+  DEPENDS:=+luci-base +rpcd +rpcd-mod-file +wwan +umbim +kmod-usb-net-cdc-mbim +kmod-sched-core +libmbim +mbim-utils +ip-full +tc-tiny +iptables +iptables-mod-conntrack-extra +usb-modeswitch
 endef
 
 define Package/luci-app-mbim-lenovo/description

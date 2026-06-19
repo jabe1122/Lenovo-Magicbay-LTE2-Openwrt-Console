@@ -25,6 +25,30 @@ annotated logs, and the ASR1803 all-zero Ethernet MAC receive-path quirk.
 蜂窝 WAN 状态同步、流量统计、带注释日志，以及 ASR1803 入站数据包零 MAC 地址
 的兼容修正。
 
+## Compatibility / 兼容性定位
+
+This project is Lenovo MagicBay LTE2 / ASR1803 focused. It is not a generic
+manager for every USB cellular modem. Starting with `1.0.1-r10`, the package
+uses standard OpenWrt LuCI dependency names and ships as a single `_all.ipk`
+because it contains scripts and LuCI assets instead of compiled CPU-specific
+binaries.
+
+本项目面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用管理器。
+从 `1.0.1-r10` 开始，软件包使用标准 OpenWrt LuCI 依赖名称，并以单个 `_all.ipk`
+发布，因为它主要由脚本和 LuCI 页面组成，不包含针对某个 CPU 架构编译的二进制。
+
+The package was developed and tested on a GL.iNet MT3600BE running GL.iNet SDK 4
+firmware, while `r10` is packaged for standard OpenWrt-style LuCI installs. The
+GL.iNet OUI entry remains included as an optional enhancement; on routers
+without GL.iNet OUI it is simply ignored. On stock or custom OpenWrt builds,
+make sure the firmware provides the required MBIM, LuCI, traffic-control and
+firewall components.
+
+本包基于运行 GL.iNet SDK 4 固件的 GL.iNet MT3600BE 开发和测试。普通 OpenWrt
+或其他定制固件需要具备 MBIM、LuCI、流量控制和防火墙相关组件。`r10` 已按标准
+OpenWrt LuCI 安装方式打包；GL.iNet OUI 入口作为可选增强保留，在没有 GL.iNet
+OUI 的路由器上会被自然忽略。
+
 ## Features / 功能
 
 - MBIM dialing through `/dev/cdc-wdm0` and `wwan0`
@@ -33,8 +57,8 @@ annotated logs, and the ASR1803 all-zero Ethernet MAC receive-path quirk.
 - USB 热插拔自动启动，拔出时自动清理运行状态
 - OpenWrt/GL cellular WAN status synchronization
 - 同步 OpenWrt/GL 蜂窝网络 WAN 在线状态
-- GL.iNet OUI application-menu entry
-- GL.iNet OUI 应用菜单入口
+- optional GL.iNet OUI application-menu entry
+- 可选 GL.iNet OUI 应用菜单入口
 - receive-path repair with `tc skbedit ptype host`
 - 使用 `tc skbedit ptype host` 修正收包路径
 - NAT and LAN forwarding setup
@@ -54,23 +78,26 @@ Release artifacts are kept in `dist/`.
 
 发布产物位于 `dist/` 目录。
 
-For standard OpenWrt-style installs:
+For OpenWrt-style installs where the listed dependencies are available:
 
-标准 OpenWrt 安装方式：
+在依赖已满足的 OpenWrt 类固件上安装：
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r9_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
 
-For the tested GL.iNet SDK 4 firmware target:
+The same `_all.ipk` is used on the tested GL.iNet target. If your GL.iNet
+firmware does not expose standard LuCI dependency names, build from source on
+that firmware SDK or adjust dependencies for that firmware.
 
-针对已测试的 GL.iNet SDK 4 固件目标：
+已测试的 GL.iNet 目标也使用同一个 `_all.ipk`。如果你的 GL.iNet 固件不提供标准
+LuCI 依赖包名，请在对应固件 SDK 中源码编译，或按该固件的包名调整依赖。
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r9_aarch64_cortex-a53.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```

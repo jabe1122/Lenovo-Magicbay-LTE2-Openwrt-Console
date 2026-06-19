@@ -18,26 +18,47 @@ The page also includes:
 - recent traffic bar charts, with blue for download and orange for upload
 - 最近流量统计柱状图，蓝色为下行流量，橙色为上行流量
 
+## Compatibility / 兼容性
+
+This package is designed for the Lenovo MagicBay LTE2 / ASR1803 module. It is
+not a generic package for every USB cellular modem.
+
+这个包面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用包。
+
+Since `1.0.1-r10`, the release uses one architecture-independent `_all.ipk` and
+standard OpenWrt LuCI dependency names. The GL.iNet OUI menu entry is included
+as an optional enhancement and is ignored on systems without GL.iNet OUI.
+
+从 `1.0.1-r10` 开始，发布物使用单个架构无关的 `_all.ipk`，并采用标准 OpenWrt
+LuCI 依赖名称。GL.iNet OUI 菜单入口作为可选增强保留；没有 GL.iNet OUI 的系统会
+自然忽略它。
+
+For stock or custom OpenWrt builds, make sure MBIM, LuCI, traffic-control and
+firewall support are available. If your firmware uses different package names,
+rebuild from the matching OpenWrt/firmware SDK and adjust dependencies there.
+
+普通 OpenWrt 或其他定制固件需要具备 MBIM、LuCI、流量控制和防火墙支持。如果你的
+固件使用不同的依赖包名，请使用对应 OpenWrt/固件 SDK 重新编译并调整依赖。
+
 ## Install / 安装
 
-For standard OpenWrt-style installs, use the architecture-independent package:
+For OpenWrt-style installs, use the architecture-independent package:
 
-标准 OpenWrt 使用通用包：
+OpenWrt 类固件使用架构无关包：
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r9_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
 
-For the tested GL.iNet firmware, use the architecture-matched package because
-its LuCI dependency name is `gl-sdk4-luci`:
+The tested GL.iNet MT3600BE target uses the same `_all.ipk` in this release:
 
-当前已测试的 GL.iNet 固件使用架构匹配包，因为它的 LuCI 依赖包名是 `gl-sdk4-luci`：
+当前已测试的 GL.iNet MT3600BE 目标在本版本中使用同一个 `_all.ipk`：
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r9_aarch64_cortex-a53.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r10_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```

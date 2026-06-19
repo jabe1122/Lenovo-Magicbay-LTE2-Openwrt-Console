@@ -1,5 +1,14 @@
 # Changelog / 更新日志
 
+## 1.0.1-r10
+
+- Switched package dependencies from GL.iNet SDK 4 LuCI package names to standard OpenWrt LuCI dependency names.
+- 将软件包依赖从 GL.iNet SDK 4 LuCI 包名切换为标准 OpenWrt LuCI 依赖名称。
+- Published a single architecture-independent `_all.ipk` for script/LuCI assets.
+- 发布单个架构无关的 `_all.ipk`，用于脚本和 LuCI 页面资源。
+- Clarified that the package targets Lenovo MagicBay LTE2 / ASR1803 modules, while GL.iNet OUI integration is optional.
+- 明确本包面向 Lenovo MagicBay LTE2 / ASR1803 模块，GL.iNet OUI 集成为可选增强。
+
 ## 1.0.1-r9
 
 - Added automatic detach cleanup for USB unplug events.
