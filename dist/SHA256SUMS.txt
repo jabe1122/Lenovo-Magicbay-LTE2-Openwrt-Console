@@ -1,3 +1,3 @@
-57d9aa0bad7f8650d0516b7c39ac4b18c522d282696d09b924c52b1811293fef  luci-app-mbim-lenovo_1.0.1-r11_all.ipk
-b5d3aa72afedf53ef83e43e973f0e7a23856e8be4c07cca0c952147ce0e4f4af  luci-app-mbim-lenovo-glinet_1.0.1-r11_all.ipk
-d598e218f5476b130a6867f05be8ffd1924d2d8b2b73efa155b8e8a3f469b228  luci-app-mbim-lenovo-1.0.1-source.tar.gz
+581c080c7c1ace8945b1e0ac0810ec62459b50e27911d267d5b0d658d33f7708  luci-app-mbim-lenovo_1.0.1-r12_all.ipk
+a35c18d6a3302aa4bb99f6b24c55e2207a8126ac1ee44eb4dfca6f3e09bc8682  luci-app-mbim-lenovo-glinet_1.0.1-r12_all.ipk
+760ac50c9420aef156506f929403442f921313bfb40c37593311f68ea8fb2b08  luci-app-mbim-lenovo-1.0.1-source.tar.gz

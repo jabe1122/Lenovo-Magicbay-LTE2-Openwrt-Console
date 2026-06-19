@@ -25,11 +25,11 @@ not a generic package for every USB cellular modem.
 
 这个包面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用包。
 
-Since `1.0.1-r11`, the release provides two architecture-independent `_all.ipk`
+Since `1.0.1-r12`, the release provides two architecture-independent `_all.ipk`
 packages. The standard OpenWrt package uses `luci-base`; the GL.iNet package
 uses `gl-sdk4-luci` and `gl-sdk4-lua-utils`.
 
-从 `1.0.1-r11` 开始，发布物提供两个架构无关的 `_all.ipk`。标准 OpenWrt 包使用
+从 `1.0.1-r12` 开始，发布物提供两个架构无关的 `_all.ipk`。标准 OpenWrt 包使用
 `luci-base`；GL.iNet 包使用 `gl-sdk4-luci` 和 `gl-sdk4-lua-utils`。
 
 For stock or custom OpenWrt builds, make sure MBIM, LuCI, traffic-control and
@@ -48,7 +48,7 @@ For standard OpenWrt or custom firmware with standard LuCI package names:
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r11_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r12_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
@@ -58,7 +58,7 @@ For GL.iNet SDK 4 firmware using GL.iNet LuCI dependency names:
 使用 GL.iNet LuCI 依赖包名的 GL.iNet SDK 4 固件：
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r11_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r12_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```

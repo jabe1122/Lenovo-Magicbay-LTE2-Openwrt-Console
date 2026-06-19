@@ -2,9 +2,9 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-mbim-lenovo
 PKG_VERSION:=1.0.1
-PKG_RELEASE:=11
+PKG_RELEASE:=12
 PKG_LICENSE:=MIT
-PKG_MAINTAINER:=OpenWrt User
+PKG_MAINTAINER:=jabe1122 <106698678+jabe1122@users.noreply.github.com>
 
 include $(INCLUDE_DIR)/package.mk
 

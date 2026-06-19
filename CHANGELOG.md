@@ -1,5 +1,12 @@
 # Changelog / 更新日志
 
+## 1.0.1-r12
+
+- Updated package maintainer and license copyright to `jabe1122`.
+- 将软件包维护者和许可证版权更新为 `jabe1122`。
+- Added bilingual contributor and credits documentation for `jabe1122`, `openwrt/openwrt` and `openai/codex`.
+- 增加双语贡献者与致谢文档，列出 `jabe1122`、`openwrt/openwrt` 和 `openai/codex`。
+
 ## 1.0.1-r11
 
 - Published two install packages: standard OpenWrt and GL.iNet SDK 4 variants.

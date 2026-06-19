@@ -28,12 +28,12 @@ annotated logs, and the ASR1803 all-zero Ethernet MAC receive-path quirk.
 ## Compatibility / 兼容性定位
 
 This project is Lenovo MagicBay LTE2 / ASR1803 focused. It is not a generic
-manager for every USB cellular modem. Starting with `1.0.1-r11`, releases ship
+manager for every USB cellular modem. Starting with `1.0.1-r12`, releases ship
 two architecture-independent packages because the runtime is made of scripts
 and LuCI assets instead of compiled CPU-specific binaries.
 
 本项目面向 Lenovo MagicBay LTE2 / ASR1803 模块，不是所有 USB 蜂窝模块的通用管理器。
-从 `1.0.1-r11` 开始，发布物提供两个架构无关软件包，因为运行时代码主要由脚本和
+从 `1.0.1-r12` 开始，发布物提供两个架构无关软件包，因为运行时代码主要由脚本和
 LuCI 页面组成，不包含针对某个 CPU 架构编译的二进制。
 
 The package was developed and tested on a GL.iNet MT3600BE running GL.iNet SDK 4
@@ -81,7 +81,7 @@ For standard OpenWrt or custom firmware with standard LuCI package names:
 
 ```sh
 opkg update
-opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r11_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo_1.0.1-r12_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
@@ -91,7 +91,7 @@ For GL.iNet SDK 4 firmware using GL.iNet LuCI dependency names:
 使用 GL.iNet LuCI 依赖包名的 GL.iNet SDK 4 固件：
 
 ```sh
-opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r11_all.ipk
+opkg install /tmp/luci-app-mbim-lenovo-glinet_1.0.1-r12_all.ipk
 /etc/init.d/rpcd reload
 /etc/init.d/uhttpd reload
 ```
@@ -173,6 +173,12 @@ USB 产品 ID `17ef:7005` 仅用于识别受支持的模块型号。
 See [PRIVACY.md](PRIVACY.md) for more detail.
 
 更多说明见 [PRIVACY.md](PRIVACY.md)。
+
+## Contributors And Credits / 贡献者与致谢
+
+Project contributor and credits are listed in [CONTRIBUTORS.md](CONTRIBUTORS.md).
+
+项目贡献者和致谢见 [CONTRIBUTORS.md](CONTRIBUTORS.md)。
 
 ## Validation / 验证
 
